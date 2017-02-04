@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label for="input1">Comment:</label>
+                <textarea class="form-control" rows="10" id="input1"></textarea>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label for="input2">Comment:</label>
+                <textarea class="form-control" rows="10" id="input2"></textarea>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <button type="button" class="btn btn-success" id="actionBtn">Success</button>
+        </div>
+
+        <div class="col-xs-6">
+            <div id="list1"></div>
+        </div>
+        <div class="col-xs-6">
+            <div id="list2"></div>
+        </div>
+
+    </div>
+</div>
+<script>
+    function count() {
+        var input1 = document.getElementById('input1').value, input2 = document.getElementById('input2').value;
+        var input1Array = input1.split("\n"), input2Array = input2.split("\n");
+        var input1Res = {}, input2Res = {};
+
+        function deletintZeroAndNoUseWords(inputArray) {
+            for (var i = 0; i <= inputArray.length; i++) {
+                if (inputArray[i] == "" || inputArray[i] == undefined || inputArray[i] == null) {
+                    delete inputArray[i];
+                }
+                var check1 = String(inputArray[i]);
+                var check = check1.split("");
+
+                var contains = function (needle) {
+                    var findNaN = needle !== needle;
+                    var indexOf;
+
+                    if (!findNaN && typeof Array.prototype.indexOf === 'function') {
+                        indexOf = Array.prototype.indexOf;
+                    } else {
+                        indexOf = function (needle) {
+                            var i = -1, index = -1;
+
+                            for (i = 0; i < this.length; i++) {
+                                var item = this[i];
+
+                                if ((findNaN && item !== item) || item === needle) {
+                                    index = i;
+                                    break;
+                                }
+                            }
+
+                            return index;
+                        };
+                    }
+
+                    return indexOf.call(this, needle) > -1;
+                };
+                var needle = ":",
+                        index = contains.call(check, needle);
+                if (!index) {
+                    delete inputArray[i];
+                }
+
+            }
+        }
+
+        deletintZeroAndNoUseWords(input1Array);
+        deletintZeroAndNoUseWords(input2Array);
+
+
+        function splittingArray(inputArray) {
+            for (var i = 0; i < inputArray.length; i++) {
+
+                if (inputArray[i] != undefined) {
+                    var val = inputArray[i].split(":")[0];
+                    var val2 = inputArray[i].split(":")[1];
+                    if (inputArray == input1Array) {
+                        input1Res[val] = val2.split("%")[0];
+                    } else {
+                        input2Res[val] = val2.split("%")[0];
+                    }
+
+                }
+            }
+        };
+        splittingArray(input1Array);
+        splittingArray(input2Array);
+
+
+        var objToArray1 = Object.values(input1Res);
+        var objToArray2 = Object.values(input2Res);
+
+        var resArray = [];
+
+        function repastingComas(objToArray) {
+            for (var i = 0; i < objToArray.length; i++) {
+                var temp = objToArray[i].replace(/,/g, '.');
+                objToArray[i] = temp;
+            }
+        }
+
+        repastingComas(objToArray1);
+        repastingComas(objToArray2);
+
+
+        function progress() {
+            for (var i = 0; i < objToArray1.length; i++) {
+                if (parseFloat(objToArray1[i]) > parseFloat(objToArray2[i])) {
+                    resArray.push('стало меньше')
+                } else if (parseFloat(objToArray1[i]) < parseFloat(objToArray2[i])) {
+                    resArray.push('стало больше')
+                }
+                else resArray.push('same')
+            }
+            var res = {};
+
+
+            for (var key in input1Res) {
+                res[key] = input1Res[key];
+            }
+
+
+            for (var i = 0; i < resArray.length; i++) {
+                res[Object.keys(res)[i]] = resArray[i];
+            }
+            for (var key in res) {
+                var newP = document.createElement('p');
+                newP.innerHTML = key + " " + res[key];
+                list1.appendChild(newP);
+            }
+        }
+
+        progress()
+
+
+    }
+    $('#actionBtn').on('click', function (e) {
+        $("p").remove();
+        count();
+
+    })
+</script>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+</body>
+</html>
