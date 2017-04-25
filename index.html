@@ -10,13 +10,13 @@
     <div class="row">
         <div class="col-xs-6">
             <div class="form-group">
-                <label for="input1">Comment:</label>
+                <label for="input1">Первые результаты:</label>
                 <textarea class="form-control" rows="10" id="input1"></textarea>
             </div>
         </div>
         <div class="col-xs-6">
             <div class="form-group">
-                <label for="input2">Comment:</label>
+                <label for="input2">Вторые результаты:</label>
                 <textarea class="form-control" rows="10" id="input2"></textarea>
             </div>
         </div>
@@ -24,15 +24,21 @@
             <button type="button" class="btn btn-success" id="actionBtn">Success</button>
         </div>
 
-        <div class="col-xs-6">
+        <div class="col-xs-12">
             <div id="list1"></div>
         </div>
-        <div class="col-xs-6">
-            <div id="list2"></div>
-        </div>
+
 
     </div>
 </div>
+<style>
+    #list1{
+        margin-top: 2%;
+    }
+    .table {
+        margin: 2px 0  2px 0 !important;
+    }
+</style>
 <script>
     function count() {
         var input1 = document.getElementById('input1').value, input2 = document.getElementById('input2').value;
@@ -106,6 +112,7 @@
 
         var objToArray1 = Object.values(input1Res);
         var objToArray2 = Object.values(input2Res);
+        console.log(objToArray1.length, objToArray2.length);
 
         var resArray = [];
 
@@ -118,32 +125,92 @@
 
         repastingComas(objToArray1);
         repastingComas(objToArray2);
+        console.log(objToArray1.length, objToArray2.length);
 
 
         function progress() {
             for (var i = 0; i < objToArray1.length; i++) {
-                if (parseFloat(objToArray1[i]) > parseFloat(objToArray2[i])) {
-                    resArray.push('стало меньше')
-                } else if (parseFloat(objToArray1[i]) < parseFloat(objToArray2[i])) {
-                    resArray.push('стало больше')
+                var parsFloatArr1 = parseFloat(objToArray1[i]);
+                var parsFloatArr2 = parseFloat(objToArray2[i]);
+
+                if (((25 < parsFloatArr1) && (parsFloatArr1 < 45)) && ((25 < parsFloatArr2) && (parsFloatArr2 < 45))) {
+                    resArray.push('Значение осталось в норме')
+                } else if (((25 < parsFloatArr1) && (parsFloatArr1 < 45)) && (((15 < parsFloatArr2) && (parsFloatArr2 < 25)) || ((45 < parsFloatArr2) && (parsFloatArr2 < 64)))) {
+                    resArray.push('Из нормы перешло в среднее')
+                } else if (((25 < parsFloatArr1) && (parsFloatArr1 < 45)) && (((5 < parsFloatArr2) && (parsFloatArr2 < 15)) || ((64 < parsFloatArr2) && (parsFloatArr2 < 85)))) {
+                    resArray.push('Из нормы перешло в сильное')
+                } else if (((25 < parsFloatArr1) && (parsFloatArr1 < 45)) && (((0 < parsFloatArr2) && (parsFloatArr2 < 15)) || ((85 < parsFloatArr2) && (parsFloatArr2 < 100)))) {
+                    resArray.push('Из нормы перешло в очень сильное')
                 }
-                else resArray.push('same')
+
+                else if ((((15 < parsFloatArr1) && (parsFloatArr1 < 25)) || ((45 < parsFloatArr1) && (parsFloatArr1 < 64))) && ((25 < parsFloatArr2) && (parsFloatArr2 < 45))) {
+                    resArray.push('Значение из среднего перешло в норму')
+                } else if ((((15 < parsFloatArr1) && (parsFloatArr1 < 25)) || ((45 < parsFloatArr1) && (parsFloatArr1 < 64))) && (((15 < parsFloatArr2) && (parsFloatArr2 < 25)) || ((45 < parsFloatArr2) && (parsFloatArr2 < 64)))) {
+                    resArray.push('Значение осталось средним')
+                } else if ((((15 < parsFloatArr1) && (parsFloatArr1 < 25)) || ((45 < parsFloatArr1) && (parsFloatArr1 < 64))) && (((5 < parsFloatArr2) && (parsFloatArr2 < 15)) || ((64 < parsFloatArr2) && (parsFloatArr2 < 85)))) {
+                    resArray.push('Значение перешло из среднего в сильное')
+                } else if ((((15 < parsFloatArr1) && (parsFloatArr1 < 25)) || ((45 < parsFloatArr1) && (parsFloatArr1 < 64))) && (((0 < parsFloatArr2) && (parsFloatArr2 < 15)) || ((85 < parsFloatArr2) && (parsFloatArr2 < 100)))) {
+                    resArray.push('Значение перешло из среднего очень сильное')
+                }
+//////////////////
+                else if ((((5 < parsFloatArr1) && (parsFloatArr1 < 15)) || ((64 < parsFloatArr1) && (parsFloatArr1 < 85))) && ((25 < parsFloatArr2) && (parsFloatArr2 < 45))) {
+                    resArray.push('Значение из сильного перешло в норму')
+                } else if ((((5 < parsFloatArr1) && (parsFloatArr1 < 15)) || ((64 < parsFloatArr1) && (parsFloatArr1 < 85))) && (((15 < parsFloatArr2) && (parsFloatArr2 < 25)) || ((45 < parsFloatArr2) && (parsFloatArr2 < 64)))) {
+                    resArray.push('Значение из сильного перешло в среднее')
+                } else if ((((5 < parsFloatArr1) && (parsFloatArr1 < 15)) || ((64 < parsFloatArr1) && (parsFloatArr1 < 85))) && (((5 < parsFloatArr2) && (parsFloatArr2 < 15)) || ((64 < parsFloatArr2) && (parsFloatArr2 < 85)))) {
+                    resArray.push('Значение осталось в сильном')
+                } else if ((((5 < parsFloatArr1) && (parsFloatArr1 < 15)) || ((64 < parsFloatArr1) && (parsFloatArr1 < 85))) && (((0 < parsFloatArr2) && (parsFloatArr2 < 15)) || ((85 < parsFloatArr2) && (parsFloatArr2 < 100)))) {
+                    resArray.push('Значение из сильного перешло в очень сильное')
+                }
+
+                else if ((((0 < parsFloatArr1) && (parsFloatArr1 < 5)) || ((85 < parsFloatArr1) && (parsFloatArr1 < 100))) && ((25 < parsFloatArr2) && (parsFloatArr2 < 45))) {
+                    resArray.push('Значение из очень сильного перешло в норму')
+                } else if ((((0 < parsFloatArr1) && (parsFloatArr1 < 5)) || ((85 < parsFloatArr1) && (parsFloatArr1 < 100))) && (((15 < parsFloatArr2) && (parsFloatArr2 < 25)) || ((45 < parsFloatArr2) && (parsFloatArr2 < 64)))) {
+                    resArray.push('Значение из очень сильно гоперешло в среднее')
+                } else if ((((0 < parsFloatArr1) && (parsFloatArr1 < 5)) || ((85 < parsFloatArr1) && (parsFloatArr1 < 100))) && (((5 < parsFloatArr2) && (parsFloatArr2 < 15)) || ((64 < parsFloatArr2) && (parsFloatArr2 < 85)))) {
+                    resArray.push('Значение из очень сильного перешло в сильное')
+                } else if ((((0 < parsFloatArr1) && (parsFloatArr1 < 5)) || ((85 < parsFloatArr1) && (parsFloatArr1 < 100))) && (((0 < parsFloatArr2) && (parsFloatArr2 < 15)) || ((85 < parsFloatArr2) && (parsFloatArr2 < 100)))) {
+                    resArray.push('Значение осталось очень сильным')
+                }
+
+
             }
+            console.log(objToArray1.length, objToArray2.length);
+            console.log(resArray.length);
+
             var res = {};
 
 
             for (var key in input1Res) {
                 res[key] = input1Res[key];
             }
+            console.log(res, Object.keys(res).length);
+            console.log(resArray, resArray.length);
 
 
             for (var i = 0; i < resArray.length; i++) {
                 res[Object.keys(res)[i]] = resArray[i];
             }
             for (var key in res) {
-                var newP = document.createElement('p');
-                newP.innerHTML = key + " " + res[key];
-                list1.appendChild(newP);
+//                var newP = document.createElement('p');
+//                newP.innerHTML = key + " " + res[key];
+//                list1.appendChild(newP);
+
+                var newElem = document.createElement("table");
+                newElem.className = "table table-striped";
+
+                newElem.width = "100%"
+                var newRow = newElem.insertRow(0);
+                var newCell = newRow.insertCell(0);
+                newRow.width = "100%";
+
+                newCell.width = "50%";
+                newCell.innerHTML = key;
+                var newCell = newRow.insertCell(1);
+                newCell.width = "50%";
+                newCell.innerHTML = res[key];
+
+                list1.appendChild(newElem);
             }
         }
 
